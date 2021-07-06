@@ -53,7 +53,7 @@ public class PlaySongActivity extends AppCompatActivity {
             @Override
             public void onPrepared(MediaPlayer mp){
                 seekbar.setMax(player.getDuration());
-                //updateSeekbar();
+                updateSeekbar();
             }
         });
         player.setOnBufferingUpdateListener(new MediaPlayer.OnBufferingUpdateListener() {
@@ -172,18 +172,17 @@ public class PlaySongActivity extends AppCompatActivity {
                 handler.removeCallbacksAndMessages(null);
         }
 
-
         super.onBackPressed();
         player.release();
     }
 
-    public void updateSeekBar(){
+    public void updateSeekbar(){
         int currPos = player.getCurrentPosition();
         seekbar.setProgress(currPos);
         runnable = new Runnable(){
             @Override
             public void run(){
-                updateSeekBar();
+                updateSeekbar();
             }
         };
         handler.postDelayed(runnable, 1000);
