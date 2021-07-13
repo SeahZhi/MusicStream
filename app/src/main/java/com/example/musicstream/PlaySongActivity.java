@@ -41,6 +41,7 @@ public class PlaySongActivity extends AppCompatActivity {
             player = null;
         }
         seekbar = (SeekBar) findViewById(R.id.songSeekBar);
+        //Reset the player to prevent any problem regarding the player e.g. multiiple songs playing at once
 
         btnPlayPause = findViewById(R.id.btnPlayPause);
         Bundle songData = this.getIntent().getExtras();
@@ -50,6 +51,7 @@ public class PlaySongActivity extends AppCompatActivity {
         playSong(filelink);
 
         player.setOnPreparedListener(new MediaPlayer.OnPreparedListener(){
+            //listens to the sequence for any updates which always runs in the background
             @Override
             public void onPrepared(MediaPlayer mp){
                 seekbar.setMax(player.getDuration());
@@ -142,6 +144,7 @@ public class PlaySongActivity extends AppCompatActivity {
                 btnPlayPause.setText("PLAY");
 
                 seekbar.setProgress(0);
+                //reset he seekbar back to the start when music has ended
             }
         });
     }
@@ -164,12 +167,13 @@ public class PlaySongActivity extends AppCompatActivity {
         playSong(filelink);
     }
 
+    @Override
     public void onBackPressed(){
         if (player != null){
-            player.release();
+            player.release(); //Clear the player
 
             if(handler != null)
-                handler.removeCallbacksAndMessages(null);
+                handler.removeCallbacksAndMessages(null); //Clear the handler
         }
 
         super.onBackPressed();
@@ -177,8 +181,8 @@ public class PlaySongActivity extends AppCompatActivity {
     }
 
     public void updateSeekbar(){
-        int currPos = player.getCurrentPosition();
-        seekbar.setProgress(currPos);
+        int currPos = player.getCurrentPosition(); //Storing the current position value into an integer variable(currPos)
+        seekbar.setProgress(currPos); //Passing in the value of currPos so that the seekbar gets updated concurrently when the music is playing.
         runnable = new Runnable(){
             @Override
             public void run(){
