@@ -8,8 +8,8 @@
 
     <ImageView
         android:id="@+id/imgCoverArt"
-        android:layout_width="350dp"
-        android:layout_height="350dp"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
         android:layout_marginTop="20dp"
         android:scaleType="fitCenter"
         app:layout_constraintEnd_toEndOf="parent"
@@ -46,7 +46,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="28dp"
-        android:layout_marginTop="52dp"
+        android:layout_marginTop="136dp"
         android:onClick="playPrevious"
         android:text="PREV"
         android:textAlignment="center"
@@ -86,8 +86,33 @@
         android:layout_height="25dp"
         app:layout_constraintBottom_toTopOf="@+id/btnPlayPause"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.508"
+        app:layout_constraintHorizontal_bias="0.491"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtArtist"
-        app:layout_constraintVertical_bias="0.257" />
+        app:layout_constraintVertical_bias="0.693" />
+
+    <Button
+        android:id="@+id/repeatBtn"
+        android:layout_width="53dp"
+        android:layout_height="39dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="28dp"
+        android:background="@drawable/repeat"
+        android:onClick="repeatSong"
+        app:backgroundTint="#4E00FF"
+        app:backgroundTintMode="multiply"
+        app:layout_constraintBottom_toTopOf="@+id/songSeekBar"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <Button
+        android:id="@+id/shuffleBtn"
+        android:layout_width="53dp"
+        android:layout_height="39dp"
+        android:layout_marginStart="28dp"
+        android:background="@drawable/shuffles"
+        android:onClick="shuffleSong"
+        app:backgroundTintMode="multiply"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/repeatBtn" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

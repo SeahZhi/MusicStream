@@ -2,7 +2,7 @@ package com.example.musicstream;
 
 public class SongCollection {
 
-    private Song songs[] = new Song[3];
+    Song songs[] = new Song[3];
 
     public SongCollection(){
         Song theWayYouLookTonight = new Song("S1001",

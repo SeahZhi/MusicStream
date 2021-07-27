@@ -2,6 +2,7 @@ package com.example.musicstream;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,6 +15,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public class PlaySongActivity extends AppCompatActivity {
 
@@ -26,12 +30,22 @@ public class PlaySongActivity extends AppCompatActivity {
     private MediaPlayer player = new MediaPlayer();
     private Button btnPlayPause = null;
     private SongCollection songCollection = new SongCollection();
+    private SongCollection originalsongCollection = new SongCollection();
+
+    List<Song> shuffleList = Arrays.asList(songCollection.songs);
+    //Sorts songs array into a list for the purpose of shuffling.
 
     //The 3 variables necessary for the SeekBar Example
     SeekBar seekbar;
     Handler handler = new Handler();
     Runnable runnable;
 
+    Button repeatBtn;
+    Boolean repeatFlag = false;
+    Button shuffleBtn;
+    Boolean shuffleFlag = false;
+
+    @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,7 +55,7 @@ public class PlaySongActivity extends AppCompatActivity {
             player = null;
         }
         seekbar = (SeekBar) findViewById(R.id.songSeekBar);
-        //Reset the player to prevent any problem regarding the player e.g. multiiple songs playing at once
+        //Reset the player to prevent any problem regarding the player e.g. multiple songs playing at once
 
         btnPlayPause = findViewById(R.id.btnPlayPause);
         Bundle songData = this.getIntent().getExtras();
@@ -65,7 +79,11 @@ public class PlaySongActivity extends AppCompatActivity {
             }
         });
 
+        repeatBtn = findViewById(R.id.repeatBtn);
+        shuffleBtn = findViewById(R.id.shuffleBtn);
+
     }
+
 
     public void displaySongBasedOnIndex(int selectedIndex) {
         Song song = songCollection.getCurrentSong(selectedIndex);
@@ -126,6 +144,7 @@ public class PlaySongActivity extends AppCompatActivity {
     }
 
     public void playOrPauseMusic(View view) {
+        //this method changes the play/pause button according to whether song is playing or not.
         if (player.isPlaying()) {
             player.pause();
             btnPlayPause.setText("PLAY");
@@ -139,9 +158,15 @@ public class PlaySongActivity extends AppCompatActivity {
         player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
-                Toast.makeText(getBaseContext(), "The song had ended and the onCompleteListener is activated\n" +
-                        "The button text is changed to 'PLAY'", Toast.LENGTH_SHORT).show();
-                btnPlayPause.setText("PLAY");
+
+                if(repeatFlag){
+                    playOrPauseMusic(null);
+                    //When repeatFLag is true which is when loop is activated, repeats current song.
+                }
+                else {
+                    btnPlayPause.setText("PLAY");
+                    //else nothing plays and play/pause button becomes paused.
+                }
 
                 seekbar.setProgress(0);
                 //reset he seekbar back to the start when music has ended
@@ -181,8 +206,10 @@ public class PlaySongActivity extends AppCompatActivity {
     }
 
     public void updateSeekbar(){
-        int currPos = player.getCurrentPosition(); //Storing the current position value into an integer variable(currPos)
-        seekbar.setProgress(currPos); //Passing in the value of currPos so that the seekbar gets updated concurrently when the music is playing.
+        int currPos = player.getCurrentPosition();
+        //Storing the current position value into an integer variable(currPos)
+        seekbar.setProgress(currPos);
+        //Passing in the value of currPos so that the seekbar gets updated concurrently when the music is playing.
         runnable = new Runnable(){
             @Override
             public void run(){
@@ -193,4 +220,38 @@ public class PlaySongActivity extends AppCompatActivity {
     }
 
 
+    public void repeatSong(View view) {
+        //this method changes the repeat icon when pressed.
+        if(repeatFlag){
+            repeatBtn.setBackgroundResource(R.drawable.repeat);
+            //Changes the button to be unhighlighted (loop function not activated yet) when pressed.
+        }
+        else{
+            repeatBtn.setBackgroundResource(R.drawable.repeated);
+            //changes the button to be highlighted when pressed.
+        }
+        repeatFlag = !repeatFlag;
+        //Changes the true or false value of repeatFlag so as to create a cycle for the button to be able to change its background.
+    }
+
+    public void shuffleSong(View view) {
+        //this method changes the shuffle icon when pressed.
+        if(shuffleFlag){
+            shuffleBtn.setBackgroundResource(R.drawable.shuffles);
+            //Changes the button to be unhighlighted (shuffle function not activated yet) when pressed.
+            songCollection = new SongCollection();
+            //resets the list of sing to original line up.
+        }
+        else{
+            shuffleBtn.setBackgroundResource(R.drawable.shuffled);
+            //changes the button to be highlighted when pressed.
+            Collections.shuffle(shuffleList);
+            //shuffles the list of sing.
+            shuffleList.toArray(songCollection.songs);
+            //passing in the shuffleList's order of songs into the actual array so as to have a result that the songs are shuffled.
+
+        }
+        shuffleFlag = !shuffleFlag;
+        //Changes the true or false value of shuffleFlag so as to create a cycle for the button to be able to change its background.
+    }
 }
